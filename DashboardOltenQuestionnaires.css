@@ -1,0 +1,143 @@
+.titles {
+    color: white !important;
+}
+
+.list-group-item{
+    cursor: pointer;
+    transition: 100ms;
+    opacity: 0.7;
+
+}
+
+div.list-group-item:hover {
+    color: black;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.nav-panel {
+    transition: 0.1s;
+}
+
+i.nav-panel:hover {
+    color: #009688;
+}
+
+a:hover {
+    color: black !important;
+}
+
+h4.list-group-item-heading {
+    color:inherit !important;
+}
+
+div.least-content {
+    color:inherit !important;
+}
+
+.alert {
+    bottom: 25vh;
+    left: 50%;
+    position: fixed;
+    width: 300px;
+    margin: 0 auto;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.nav-right {
+    cursor: pointer;
+    position: relative;
+    float: right;
+    margin-top: 5px;
+}
+
+.nav-left {
+    cursor: pointer;
+    position: relative;
+    float: left;
+    margin-top: 5px;
+}
+
+a, u {
+    text-decoration: none;
+}
+
+a:hover
+{
+    color:white;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.category-panel {
+    background-color: #EEEEEE !important;
+    color: black !important;
+}
+
+.navbar {
+    background-color: #512DA8 !important;
+}
+
+#event-view-header {
+    background-color: #7E57C2 !important;
+    color: white !important;
+    height: 55px !important;
+}
+
+#cat-header {
+    background-color: #7E57C2 !important;
+    color: white !important;
+    height: 55px !important;
+    text-align: center;
+    line-height: 31px;
+}
+
+/*.category-panel {
+    background-color: #EEEEEE
+    !important;
+    color: black !important;
+}
+
+.navbar {
+    background-color: #263238  !important;
+}
+
+#event-view-header {
+    background-color: #455A64 !important;
+    color: white !important;
+    height: 55px !important;
+}
+
+#cat-header {
+    background-color: #455A64 !important;
+    color: white !important;
+    height: 55px !important;
+    text-align: center;
+    line-height: 31px;
+}*/
+
+
+
+/*.category-panel {
+    background-color: #C5CAE9 !important;
+    color: black !important;
+}
+
+.navbar {
+    background-color: #1A237E  !important;
+}
+
+#event-view-header {
+    background-color: #283593 !important;
+    color: white !important;
+    height: 55px !important;
+}
+
+#cat-header {
+    background-color: #283593 !important;
+    color: white !important;
+    height: 55px !important;
+    text-align: center;
+    line-height: 31px;
+}*/
