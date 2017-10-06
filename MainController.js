@@ -5,6 +5,7 @@
  */
 
 class MainController {
+
     constructor(userConnection, elementId, categoryElementId) {
         this.elementId = elementId;
         this.userConnection = userConnection;
@@ -17,9 +18,9 @@ class MainController {
         let initInstance = function (obj, prop) { obj[prop].init(); };
         let eventLoader = new PryvEventLoader();
         let latestEventView = new LatestEventView(this.elementId, this);
-        let latestEventData = new LatestEventData(this, eventLoader, this.userConnection, STREAMS);
+        let latestEventData = new UsernameLatestEventData(this, eventLoader, this.userConnection, STREAMS);
         let alertViewTest = new WarningAlertView();
-        let categoryData = new CategoryEventData(eventLoader, this.userConnection, STREAMS);
+        let categoryData = new UsernameCategoryEventData(eventLoader, this.userConnection, STREAMS);
         let categoryView = new CategoryView("cat-events", this, this.categoryElementId);
         let latestEventViewHeader = new NavHeaderView(this, this.elementId + "-header", "Aktuellste Events");
         let loadingView = new LoadingView("loading-view", "loading-view-container", this);
@@ -33,7 +34,7 @@ class MainController {
         this.views = {
             latestEventView: latestEventView,
             categoryView: categoryView,
-            alertViewTest:alertViewTest,
+            alertViewTest: alertViewTest,
             latestEventViewHeader: latestEventViewHeader,
             loadingView: loadingView
         };
@@ -71,6 +72,7 @@ class MainController {
     }
 
     onCategoryClicked(category) {
+        // TODO: allow switching between different categories
         this.views.loadingView.update(0);
         let filter;
         if (category === "Nicht kategorisiert") {

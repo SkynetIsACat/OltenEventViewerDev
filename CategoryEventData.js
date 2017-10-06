@@ -84,7 +84,6 @@ class CategoryEventData extends GenericDataModel {
      * @returns {Map}: {key: [events]}
      */
     extractCategories(events) {
-        // TODO: Impose hard limit on number of events per category
         log(events, "extractCategories");
         let result = new Map();
         for (let i=0; i < events.length; i++) {
