@@ -10,17 +10,21 @@
 class UsernameLatestEventData extends LatestEventData {
 
     constructor(controller, loader, userConnection ,streams , eventsLimit=1000, displayLimit=15) {
-        super(controller, loader, userConnection ,streams , eventsLimit, displayLimit)
+        super(controller, loader, userConnection ,streams , eventsLimit, displayLimit);
         this.username = null;
     }
 
-    update(filter, loadingPercentage) {
-        this.username = filter._settings.tags[0];
+    update(filter, loadingPercentage, username=null) {
+        // this.username = filter._settings.tags[0];
+        this.username = username;
+
         let newFilter = new pryv.Filter({
             limit: 500,
             streams: STREAMS,
         });
-        this.reloadData(newFilter, loadingPercentage);
+
+        console.log("filter: ", newFilter);
+        this.reloadData(filter, loadingPercentage);
         this.startDisplayPosition = 0;
     }
 

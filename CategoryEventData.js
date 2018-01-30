@@ -18,6 +18,14 @@ class CategoryEventData extends GenericDataModel {
         this.loadMapping(this.userConnection);
     }
 
+    update(filter) {
+        this.reloadData(filter, 100);
+    }
+
+    cleanData() {
+        this.data = new Map();
+    }
+
     setStreams(streams) {
         this.streams = streams;
     }

@@ -4,6 +4,9 @@
  * Copyright (c) 01/08/17 University of Bern
  */
 
+/**
+ * Controls broader logic of website interactions with the user.
+ */
 class MainController {
 
     constructor(userConnection, elementId, categoryElementId) {
@@ -12,18 +15,28 @@ class MainController {
         this.categoryElementId = categoryElementId;
         this.views = null;
         this.models = null;
+        this.options = {
+            streams: STREAMS,
+            tags:[],
+            fromTime:null,
+            toTime:null
+        };
     }
 
     init() {
         let initInstance = function (obj, prop) { obj[prop].init(); };
+
         let eventLoader = new PryvEventLoader();
         let latestEventView = new LatestEventView(this.elementId, this);
         let latestEventData = new UsernameLatestEventData(this, eventLoader, this.userConnection, STREAMS);
         let alertViewTest = new WarningAlertView();
+        let alertViewSuccess = new SuccessAlertView();
+        let confirmDeleteAlert = new WarningConfirmationView(this);
         let categoryData = new UsernameCategoryEventData(eventLoader, this.userConnection, STREAMS);
         let categoryView = new CategoryView("cat-events", this, this.categoryElementId);
         let latestEventViewHeader = new NavHeaderView(this, this.elementId + "-header", "Aktuellste Events");
         let loadingView = new LoadingView("loading-view", "loading-view-container", this);
+        let optionView = new OptionView("option-view", this);
 
         categoryData.registerListener(categoryView);
         latestEventData.registerListener(latestEventView);
@@ -36,7 +49,10 @@ class MainController {
             categoryView: categoryView,
             alertViewTest: alertViewTest,
             latestEventViewHeader: latestEventViewHeader,
-            loadingView: loadingView
+            loadingView: loadingView,
+            optionView: optionView,
+            warningConfirmationView: confirmDeleteAlert,
+            successAlertView: alertViewSuccess
         };
         this.models = {
             latestEventData: latestEventData,
@@ -71,6 +87,21 @@ class MainController {
         this.models.latestEventData.loadPrevious();
     }
 
+    updateOptions(options) {
+        this.options = options;
+    }
+
+    updateEventData() {
+        const pFilter = new pryv.Filter({
+            streams: this.options.streams,
+            tags: this.options.tags,
+            fromTime: this.options.fromTime,
+            toTime: this.options.toTime
+        });
+        this.models.latestEventData.update(pFilter, 100);
+        this.models.categoryData.update(pFilter);
+    }
+
     onCategoryClicked(category) {
         // TODO: allow switching between different categories
         this.views.loadingView.update(0);
@@ -78,16 +109,39 @@ class MainController {
         if (category === "Nicht kategorisiert") {
             filter = new pryv.Filter({
                 limit: 500,
-                streams: STREAMS,
-            });
-        } else {
-            filter = new pryv.Filter({
-                limit: 500,
-                streams: STREAMS,
-                tags: [category]
+                streams: this.options.streams,
+                tags: this.options.tags,
+                fromTime: this.options.fromTime,
+                toTime: this.options.toTime
             });
         }
-        this.models.latestEventData.update(filter, 100);
+        else {
+            filter = new pryv.Filter({
+                limit: 500,
+                streams: this.options.streams,
+                tags: this.options.tags,
+                fromTime: this.options.fromTime,
+                toTime: this.options.toTime,
+            });
+        }
+        this.models.latestEventData.update(filter, 100, category);
+    }
+
+    askRemoveEvent(event) {
+        log(event, "askRemoveEvent");
+        this.views.warningConfirmationView.render("Do you really want to delete this event?", event);
+    }
+
+    removeEvent(event) {
+        this.models.categoryData.deleteEvent(event, (deletedEvent) => {
+            if (deletedEvent.id === event.id) {
+                this.views.successAlertView.render("Event successfully deleted!");
+                this.updateEventData();
+            }
+            else
+                this.views.alertViewTest.render("Could not delete the selected event!");
+        });
+
     }
 
 }

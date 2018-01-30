@@ -32,8 +32,10 @@ class EventView {
         let domElement = document.getElementById(elementId);
         let fragment = document.createDocumentFragment();
         log(eventObjects, "render");
+
         for (let i=0; i < eventObjects.length; i++) {
             let e = eventObjects[i];
+
             let userName = e.connection.username;
             let filledBy = e.tags[0];
             let type;
@@ -59,18 +61,45 @@ class EventView {
 
             // create dom nodes and add respective event-listeners
             newEl.innerHTML = template;
+
             newEl.addEventListener("click", () => {
+
                 let modal = document.getElementById("event-content-modal");
-                modal.innerHTML = this.getModalTemplate(
-                    userName, filledOn, date, filledBy, type , e.content
-                );
+
+                if (e.streamId === "NOMAD_GeneralHealth") {
+                    modal.innerHTML = this.getModalTemplate(
+                        userName, filledOn, date, filledBy, type, e.content, e
+                    );
+                }
+                else if (e.streamId === "InselQuestionnaires") {
+                    modal.innerHTML = this.getInselModalTemplate(
+                        userName, filledOn, date, filledBy, type, e.content, e
+                    )
+                }
+
+                let deleteButton = document.getElementById("delete-event");
+                deleteButton.addEventListener("click", () => {
+                    this.controller.askRemoveEvent(e);
+                });
+
                 $(".event-content-modal").modal("show");
+
+
             });
             fragment.appendChild(newEl);
         }
         domElement.appendChild(fragment);
     }
 
+    /**
+     * Event element template
+     * @param date the date the event occurred
+     * @param userName the name of the associated user
+     * @param filledBy by whom the event was reported
+     * @param filledOn when the event was reported
+     * @param style optional style attribute
+     * @returns {string}
+     */
     getTemplate(date, userName, filledBy, filledOn, style="") {
         // language=HTML
         return `
@@ -91,33 +120,74 @@ class EventView {
             `;
     }
 
+    getEventModifiyngTemplate() {
+        return `
+            <div style="text-align: center; margin-top: 25px;">
+                <a id="delete-event" href="javascript:void(0)" class="btn btn-danger btn-fab"><i class="material-icons">delete</i></a>
+            </div>
+        `
+    }
+
+    getInselModalTemplate(username, dateCreated, dateFilled, createdBy, type, content) {
+        let values = content.split(";").slice(3).join("<br>");
+        return `
+        <div>
+            <div class="row">
+                <div class="col-sm-6"><strong>Teilnehmer ID:</strong></div>
+                <div class="col-sm-6">${username}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6"><strong>Erstellt am:</strong></div>
+                <div class="col-sm-6">${dateCreated}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6"><strong>Ausgefüllt am:</strong></div>
+                <div class="col-sm-6">${dateFilled}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6"><strong>Erstellt von:</strong></div>
+                <div class="col-sm-6">${createdBy}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6"><strong>Typ:</strong></div>
+                <div class="col-sm-6">${type}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6"><strong>Werte:</strong></div>
+                <div class="col-sm-6">${values}</div>
+            </div>
+            ${this.getEventModifiyngTemplate()}
+        </div>
+        `
+    }
+
     // TODO: Refactor modal creation into sub-parts
-    getModalTemplate(username, dateCreated, dateFilled, createdBy, type, content) {
+    getModalTemplate(username, dateCreated, dateFilled, createdBy, type, content, event=null) {
         let tempContent = content.split(";");
         log(tempContent, "extractContent");
         return `
         <div>
-            <row>
+            <div class="row">
                 <div class="col-sm-6"><strong>Teilnehmer ID:</strong></div>
                 <div class="col-sm-6">${username}</div>
-            </row>
-            <row>
+            </div>
+            <div class="row">
                 <div class="col-sm-6"><strong>Erstellt am:</strong></div>
                 <div class="col-sm-6">${dateCreated}</div>
-            </row>
-            <row>
+            </div>
+            <div class="row">
                 <div class="col-sm-6"><strong>Ausgefüllt am:</strong></div>
                 <div class="col-sm-6">${dateFilled}</div>
-            </row>
-            <row>
+            </div>
+            <div class="row">
                 <div class="col-sm-6"><strong>Erstellt von:</strong></div>
                 <div class="col-sm-6">${createdBy}</div>
-            </row>
-            <row>
+            </div>
+            <div class="row">
                 <div class="col-sm-6"><strong>Typ:</strong></div>
                 <div class="col-sm-6">${type}</div>
-            </row>
-            <row>
+            </div>
+            <div class="row2>
                 <div class="col-xs-12">
                     <br> <strong>Inhalt</strong> <br>
                     <br> 
@@ -228,8 +298,9 @@ class EventView {
                     2.2.4 Haben sich Ihre Lebensgewohnheiten geändert? ${tempContent[44]}${tempContent[45]}<br>
                     ${tempContent[46]}
                  </div>
-            </row>
+            </div>
         </div>
+        ${this.getEventModifiyngTemplate()}
         `;
     }
 }

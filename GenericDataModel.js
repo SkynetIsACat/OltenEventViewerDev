@@ -2,14 +2,16 @@
  * Abstract Data Model class defining basic functionality for the Observer pattern and pryv event/mapping loading
  */
 class GenericDataModel {
+
     constructor(loader, userConnection, streams, limit) {
         this.loader = loader;
         this.userConnection = userConnection;
         this.streams = streams;
         this.eventsLimit = limit;
-        if (this.constructor === GenericDataModel) {
+
+        if (this.constructor === GenericDataModel)
             throw new Error("Cannot instantiate this class!");
-        }
+
         this.subject = new Subject();
         this.loadingSubject = new Subject();
         this.mapping = null;
@@ -41,12 +43,12 @@ class GenericDataModel {
      *
      * @param connection
      */
-    loadMapping(connection) {
+    loadMapping(connection, filter=null) {
         this.loader.loadMapping(connection, (err, mapping) => {
             log(err);
             log(mapping);
             this.mapping = mapping;
-            this.loadEventsFromMapping();
+            this.loadEventsFromMapping(filter);
         });
     }
 
@@ -74,10 +76,8 @@ class GenericDataModel {
     reloadData(filter, percentageLoading) {
         this.cleanData();
         if (this.mapping !== null) this.loadEventsFromMapping(filter, percentageLoading);
-        else this.loadMapping(this.userConnection);
+        else this.loadMapping(this.userConnection, filter);
     }
-
-
 
     /***
      * Loads events for the specified streams (this.streams) of all users of which mapping was retrieved and appends it.
@@ -114,5 +114,42 @@ class GenericDataModel {
                 }
             });
         }
+    }
+
+    /**
+     * Deletes a pryv event.
+     * @param event: pryv event
+     */
+    deleteEvent(event, cb) {
+        if (this.mapping === null) {
+            log("Can't delete user as user mapping is not available!", "GenericDataModel");
+            throw("Can't delete user as user mapping is not available!", "GenericDataModel");
+        }
+
+        /*
+        const user = this.mapping.filter( (e) => {
+            console.log(e.name, event.connection.);
+            return e.name === event.id;
+        });
+
+
+
+        if (user === undefined)
+            throw("Can't find this user");
+
+
+        const connSettings = {
+            username: user.name,
+            auth: user.token,
+            domain: PRYV_SETTINGS.domain
+        };
+        */
+
+        //const pryvConnection = new pryv.Connection(connSettings);
+        event.connection.events.delete(event, (err, eventDeleted) => {
+            log(err, "eventDeleteError");
+            log(eventDeleted, "eventDeleted");
+            cb(eventDeleted);
+        });
     }
 }
