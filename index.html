@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width, initial-scale=0.666667, maximum-scale=0.666667, user-scalable=0">
+        <meta name="viewport" content="width=device-width">
+        
+        <title>Questionnaire-Dashboard</title>
+        
+        <link href="DashboardOltenQuestionnaires.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/bootstrap.material-design@0.5.9(css/ripples.min.css+css/bootstrap-material-design.min.css)">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.16.0/daterangepicker.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.css">
+
+    </head>
+    
+    <body style="min-width:400px;">
+        
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- Auth Modal -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <div class="modal modal-login">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div style="text-align: center;" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 class="modal-title">Bitte melden Sie sich an!</h2>
+              </div>
+              <div class="modal-body">
+                <a id="pryv-button" href="javascript:void(0)" style="margin-left:40%;"></a>
+              </div>
+              <div class="modal-footer">
+                <button style="background-color: #66BB6A !important;" type="button" data-dismiss="modal" class="btn btn-primary btn-raised">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- END Auth Modal -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- Event Content Modal -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <div class="modal event-content-modal animated slideInDown">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Fragebogen Inhalt:</h4>
+                    </div>
+                    <div id="event-content-modal" class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- END Event Content Modal -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- Navbar -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <div class="navbar navbar-inverse navbar-fixed-top">
+          <div style="max-width:1160px;" class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="javascript:void(0)">Event View - Olten</a>
+            </div>
+            <div class="navbar-collapse collapse navbar-inverse-collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="index.html">Questionnaires</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a style="position: relative; top:10px;" class="power btn btn-warning btn-fab btn-fab-mini" id="exit-button" onclick="$('.modal-login').modal('show');" href="javascript:void(0)" title="LogIn/Out">
+                        <i class="material-icons">account_box</i>
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div id="loading-view-container" class="progress progress-striped active" style="width:100%; position: fixed; left:0; top:60px; z-index: 1000;">
+            <div id="loading-view" class="progress-bar" style="width: 5%"></div>
+        </div>
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- END Navbar -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- EventsView -->
+        <!-------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <div class="container" style="margin-top:85px;">
+
+            <div class="row">
+                <div class="col-lg-12" id="option-view"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div id="cat-header" class="panel-heading">
+                            Events Pro Student
+                        </div>
+                        <div id="category-events" class="panel-body"></div>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div id="event-view-panel" class="panel panel-default">
+                        <div class="panel-heading" id="event-view-header">
+                            Aktuellste Events
+                        </div>
+                        <div class="panel-body" style="margin-top: -15px;">
+                            <div class="list-group" id="event-view">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/g/bootstrap.material-design@0.5.9(js/material.min.js+js/ripples.min.js)"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.16.0/jquery.daterangepicker.min.js"></script>
+
+        <script type="text/javascript" src="Login.js"></script>
+        <script type="text/javascript" src="PryvEventLoader.js"></script>
+        <script type="text/javascript" src="Subject.js"></script>
+        <script type="text/javascript" src="GenericDataModel.js"></script>
+        <script type="text/javascript" src="LatestEventData.js"></script>
+        <script type="text/javascript" src="UsernameLatestEventData.js"></script>
+        <script type="text/javascript" src="CategoryEventData.js"></script>
+        <script type="text/javascript" src="UsernameCategoryEventData.js"></script>
+        <script type="text/javascript" src="NavHeaderView.js"></script>
+        <script type="text/javascript" src="EventView.js"></script>
+        <script type="text/javascript" src="CategoryView.js"></script>
+        <script type="text/javascript" src="LatestEventView.js"></script>
+        <script type="text/javascript" src="AlertView.js"></script>
+        <script type="text/javascript" src="LoadingView.js"></script>
+        <script type="text/javascript" src="Options.js"></script>
+        <script type="text/javascript" src="OptionView.js"></script>
+        <script type="text/javascript" src="MainController.js"></script>
+        <script type="text/javascript" src="pryv.js"></script>
+        <script type="text/javascript" src="Main.js"></script>
+    </body>
+</html>
